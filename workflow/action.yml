@@ -10,6 +10,8 @@ defaults:
   run:
     shell: bash
 
+name: Matrix Strategy
+
 jobs:
   matrix-strategy:
     runs:
