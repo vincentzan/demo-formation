@@ -1,0 +1,38 @@
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+env:
+  CI: true
+  NODE_VERSION: 18.18.0
+
+defaults:
+  run:
+    shell: bash
+
+name: Matrix Strategy
+
+jobs:
+  matrix-strategy:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        fruit: [apple, pear]
+        animal: [cat, dog]
+        include:
+          - color: green
+          - color: pink
+            animal: cat
+          - fruit: apple
+            shape: circle
+          - fruit: banana
+          - fruit: banana
+            animal: cat
+    steps:
+      - name: "print the matrix"
+        run: |
+          ls -la
+          echo "fruit: ${{ matrix.fruit }}"
+          echo "animal: ${{ matrix.animal }}"
+          echo "color: ${{ matrix.color }}"
+          echo "shape: ${{ matrix.shape }}"
