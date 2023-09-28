@@ -4,7 +4,7 @@ on:
 
 env:
   CI: true
-  NODE_VERSION: 18.18.0
+  NODE_VERSION: 16
 
 defaults:
   run:
@@ -25,7 +25,17 @@ jobs:
         with:
           ref: ${{ github.event.pull_request.head.sha }}
           fetch-depth: 0
-      - name: Sls mentor
-        uses: sls-mentor/sls-mentor-github-action@v0.4
+      - name: aws
+        uses: aws-actions/configure-aws-credentials@v3
         with:
-          iam-role: arn:aws:iam::463151931555:role/github-action-role
+          role-to-assume: arn:aws:iam::463151931555:role/github-action-role
+          aws-region: eu-west-1
+      - name: run sls-mentor
+        id: run-sls-mentor
+        run: |
+          echo "SLS_MENTOR_RESULT<<EOF"$'\n'"$(npx sls-mentor@latest --level 1 --noFail)"$'\n'EOF >> "$GITHUB_OUTPUT"
+        shell: bash
+      - name: output
+        env:
+          SLS_MENTOR_RESULT: ${{ steps.run-sls-mentor.outputs.SLS_MENTOR_RESULT }} 
+        run: echo "$SLS_MENTOR_RESULT"
