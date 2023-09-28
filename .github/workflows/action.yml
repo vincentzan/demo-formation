@@ -1,0 +1,33 @@
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+env:
+  CI: true
+  NODE_VERSION: 18.18.0
+
+defaults:
+  run:
+    shell: bash
+
+name: sls-mentor-action
+permissions:
+  id-token: write # This is required for requesting the JWT
+  contents: read # This is required for actions/checkout
+  pull-requests: write # This is required for creating review comments
+  
+jobs:
+  sls-mentor:
+    runs-on: ubuntu-latest
+    steps:
+      - name: checkout
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          # We need to fetch all branches and commits so that Nx affected has a base to compare against.
+          fetch-depth: 0
+      - name: 'sls-mentor-run'
+        id: sls-mentor-run
+        run: |
+            npx sls-mentor@latest --level ${{inputs.level}} --noFail
+        shell: bash
