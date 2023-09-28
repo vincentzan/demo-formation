@@ -1,0 +1,27 @@
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+env:
+  CI: true
+  NODE_VERSION: 18.18.0
+
+defaults:
+  run:
+    shell: bash
+
+name: sls-mentor-action
+
+jobs:
+  sls-mentor:
+    permissions:
+      id-token: write # This is required for requesting the JWT
+      contents: read # This is required for actions/checkout
+      pull-requests: write # This is required for creating review comments
+    runs-on: ubuntu-latest
+    steps:
+      - name: Sls mentor 
+        uses: sls-mentor/sls-mentor-github-action@intial-action
+        with: 
+          iam-role: arn:aws:iam::463151931555:role/github-action-role
+          aws-region: eu-west-1
