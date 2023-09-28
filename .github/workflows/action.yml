@@ -26,8 +26,8 @@ jobs:
           ref: ${{ github.event.pull_request.head.sha }}
           # We need to fetch all branches and commits so that Nx affected has a base to compare against.
           fetch-depth: 0
-      - name: 'sls-mentor-run'
-        id: sls-mentor-run
-        run: |
-            npx sls-mentor@latest --level ${{inputs.level}} --noFail
-        shell: bash
+      - name: Sls mentor
+        uses: sls-mentor/sls-mentor-github-action@v0.3
+        with:
+          iam-role: arn:aws:iam::463151931555:role/github-action-role
+          aws-region: eu-west-1
